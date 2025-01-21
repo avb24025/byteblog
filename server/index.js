@@ -14,7 +14,7 @@ const app = express();
 const server = http.createServer(app);
 
 // Allowed origins for CORS
-const allowedOrigins = ["https://bytesblog.netlify.app/", "http://localhost:5176"];
+const allowedOrigins = ["https://bytesblog.netlify.app/"];
 
 // Enable CORS middleware
 app.use(
