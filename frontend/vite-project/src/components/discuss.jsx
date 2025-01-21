@@ -1,3 +1,4 @@
+import { log } from "console";
 import React, { useState, useEffect } from "react";
 import { io } from "socket.io-client";
 
@@ -18,6 +19,7 @@ const Discuss = () => {
 
     return () => {
       socket.off("receiveMessage");
+      console.log("Socket disconnected");
     };
   }, []);
 
