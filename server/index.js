@@ -57,6 +57,10 @@ app.use("/api/blogs", blogRoutes);
 
 // Define the port
 const PORT = process.env.PORT || 3000;
+app.get("/", (req, res) => {
+  res.json({ message: "Server is working" });
+});
+
 
 // Start the server (REST API + WebSocket)
 server.listen(PORT, () => {
