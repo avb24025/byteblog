@@ -13,35 +13,22 @@ const app = express();
 // Set up the HTTP server
 const server = http.createServer(app);
 
-// Allowed origins for CORS
-const allowedOrigins = ["https://bytesb.netlify.app/"];
-
-// Enable CORS middleware
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    methods: ["GET", "POST"],
-    credentials: true, // Allow credentials like cookies
-  })
-);
+// Enable CORS middleware to allow frontend origin
+app.use(cors());
+app.use(express.json());
 
 // Set up Socket.IO on the same server
-const io = new Server(server, {
-  cors: {
-    origin: allowedOrigins, // Allow these origins for WebSocket
-    methods: ["GET", "POST"],
-    credentials: true,
-  },
-});
+// const io = new Server(server, {
+//   cors: {
+//     origin: "*", // Allow all origins
+//     methods: ["GET", "POST"],
+//     credentials: false, // Disable credentials for open access
+//   },
+// });
+
 
 // Middleware to parse JSON
-app.use(express.json());
+
 
 // Serve static files from the uploads directory
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
@@ -54,22 +41,22 @@ app.use("/api/user", userRoutes);
 app.use("/api/blogs", blogRoutes);
 
 // WebSocket connections
-io.on("connection", (socket) => {
-  console.log("A user connected:", socket.id);
+// io.on("connection", (socket) => {
+//   console.log("A user connected:", socket.id);
 
-  // Listen for new messages
-  socket.on("sendMessage", (message) => {
-    io.emit("receiveMessage", message); // Broadcast the message to all clients
-  });
+//   // Listen for new messages
+//   socket.on("sendMessage", (message) => {
+//     io.emit("receiveMessage", message); // Broadcast the message to all clients
+//   });
 
-  // Handle disconnections
-  socket.on("disconnect", () => {
-    console.log("User disconnected:", socket.id);
-  });
-});
+//   // Handle disconnections
+//   socket.on("disconnect", () => {
+//     console.log("User disconnected:", socket.id);
+//   });
+// });
 
 // Define the port
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // Start the server (REST API + WebSocket)
 server.listen(PORT, () => {
